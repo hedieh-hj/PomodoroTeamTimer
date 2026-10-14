@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#e95555">
+  <title>تمرکز تیمی</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span>◉</span> تمرکز تیمی</a>
+    <button id="notificationButton" class="ghost">فعال‌کردن اعلان‌ها</button>
+  </header>
+
+  <main>
+    <section id="landing" class="landing">
+      <div class="hero">
+        <p class="eyebrow">POMODORO TEAM TIMER</p>
+        <h1>با هم شروع کنید.<br><em>با هم متمرکز بمانید.</em></h1>
+        <p>یک تایمر مشترک و دقیق برای تیم‌هایی که می‌خواهند بدون حواس‌پرتی کار کنند؛ روی شبکهٔ داخلی و بدون نیاز به اینترنت.</p>
+      </div>
+      <div class="entry-grid">
+        <form id="createForm" class="card">
+          <div class="card-title"><span class="icon">＋</span><div><h2>ساخت اتاق جدید</h2><p>تنظیم یک جلسهٔ تمرکز تیمی</p></div></div>
+          <label>عنوان فعالیت<input name="title" maxlength="100" required placeholder="مثلاً تکمیل گزارش پروژه"></label>
+          <label>نام شما<input name="hostName" maxlength="30" required placeholder="نام میزبان"></label>
+          <div class="fields-3">
+            <label>تمرکز (دقیقه)<input name="focusMinutes" type="number" min="1" max="180" value="25" required></label>
+            <label>استراحت (دقیقه)<input name="breakMinutes" type="number" min="1" max="60" value="5" required></label>
+            <label>تعداد دور<input name="totalRounds" type="number" min="1" max="20" value="4" required></label>
+          </div>
+          <button class="primary" type="submit">ساخت اتاق و ورود</button>
+        </form>
+        <form id="joinForm" class="card join-card">
+          <div class="card-title"><span class="icon">→</span><div><h2>ورود به اتاق</h2><p>کد دریافتی از میزبان را وارد کنید</p></div></div>
+          <label>کد شش‌رقمی اتاق<input name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required placeholder="۱۲۳۴۵۶"></label>
+          <label>نام شما<input name="name" maxlength="30" required placeholder="نام نمایشی"></label>
+          <button class="secondary" type="submit">پیوستن به جلسه</button>
+        </form>
+      </div>
+      <div id="todayStats" class="today"></div>
+    </section>
+
+    <section id="room" class="room hidden">
+      <div class="room-head">
+        <div><p id="phaseLabel" class="eyebrow"></p><h1 id="roomTitle"></h1></div>
+        <div class="room-code">کد اتاق <strong id="roomCode"></strong><button id="copyCode" title="کپی کد">⧉</button></div>
+      </div>
+      <div class="room-grid">
+        <article id="timerCard" class="timer-card">
+          <div class="rounds"><span id="roundText"></span><div id="roundDots"></div></div>
+          <div id="timer" class="timer">25:00</div>
+          <p id="timerHint">منتظر شروع میزبان</p>
+          <div id="hostControls" class="controls hidden">
+            <button id="startButton" class="primary">شروع جلسه</button>
+            <button id="pauseButton" class="secondary hidden">توقف</button>
+            <button id="resumeButton" class="primary hidden">ادامه</button>
+            <button id="skipButton" class="ghost hidden">ردکردن استراحت</button>
+            <button id="resetButton" class="ghost">ریست</button>
+            <button id="endButton" class="danger">پایان جلسه</button>
+          </div>
+        </article>
+        <aside class="members-card">
+          <div class="members-head"><h2>اعضای اتاق</h2><span id="onlineCount"></span></div>
+          <div id="members"></div>
+        </aside>
+      </div>
+      <button id="leaveButton" class="leave">خروج از اتاق</button>
+    </section>
+  </main>
+  <div id="toast" role="status"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

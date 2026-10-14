@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PomodoroTeamTimer.Server", "PomodoroTeamTimer.Server\PomodoroTeamTimer.Server.csproj", "{A9B53F4F-2A75-4A38-A52D-22A87C9BF101}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PomodoroTeamTimer.Tray", "PomodoroTeamTimer.Tray\PomodoroTeamTimer.Tray.csproj", "{D057E84B-A1DF-49C9-9F49-C9990B47D202}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9B53F4F-2A75-4A38-A52D-22A87C9BF101}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9B53F4F-2A75-4A38-A52D-22A87C9BF101}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9B53F4F-2A75-4A38-A52D-22A87C9BF101}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9B53F4F-2A75-4A38-A52D-22A87C9BF101}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D057E84B-A1DF-49C9-9F49-C9990B47D202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D057E84B-A1DF-49C9-9F49-C9990B47D202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D057E84B-A1DF-49C9-9F49-C9990B47D202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D057E84B-A1DF-49C9-9F49-C9990B47D202}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
