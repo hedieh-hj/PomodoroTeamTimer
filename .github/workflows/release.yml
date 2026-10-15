@@ -1,0 +1,32 @@
+name: Build portable Windows package
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "7.0.x"
+      - name: Build self-contained package
+        shell: pwsh
+        run: ./scripts/publish-windows.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PomodoroTeamTimer-win-x64
+          path: artifacts/PomodoroTeamTimer-win-x64.zip
+      - name: Attach package to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/PomodoroTeamTimer-win-x64.zip
+          generate_release_notes: true

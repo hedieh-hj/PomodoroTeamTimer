@@ -12,14 +12,19 @@ internal static class Program
     private static void Main()
     {
         ApplicationConfiguration.Initialize();
-        var root = FindSolutionRoot();
-        if (root is null)
+        Process server;
+        try
         {
-            MessageBox.Show("پوشهٔ PomodoroTeamTimer.Server پیدا نشد.", "تمرکز تیمی");
+            server = StartServer();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"The local server could not be started.\n\n{ex.Message}", "Pomodoro Team Timer");
             return;
         }
 
-        using var server = StartServer(root);
+        using (server)
+        {
         using var icon = new NotifyIcon
         {
             Icon = SystemIcons.Application,
@@ -28,31 +33,53 @@ internal static class Program
             ContextMenuStrip = BuildMenu()
         };
         icon.DoubleClick += (_, _) => Open(LocalUrl);
-        icon.ShowBalloonTip(3000, "تمرکز تیمی اجرا شد", $"آدرس شبکه: http://{GetLanAddress()}:5080", ToolTipIcon.Info);
+        icon.ShowBalloonTip(3000, "Pomodoro Team Timer is running", $"Team URL: http://{GetLanAddress()}:5080", ToolTipIcon.Info);
+        _ = OpenWhenReadyAsync(server);
         Application.Run();
         if (!server.HasExited) server.Kill(true);
+        }
     }
 
     private static ContextMenuStrip BuildMenu()
     {
         var menu = new ContextMenuStrip();
-        menu.Items.Add("بازکردن برنامه", null, (_, _) => Open(LocalUrl));
-        menu.Items.Add($"آدرس شبکه: http://{GetLanAddress()}:5080", null, (_, _) => Clipboard.SetText($"http://{GetLanAddress()}:5080"));
+        menu.Items.Add("Open application", null, (_, _) => Open(LocalUrl));
+        menu.Items.Add($"Copy team URL: http://{GetLanAddress()}:5080", null, (_, _) => Clipboard.SetText($"http://{GetLanAddress()}:5080"));
         menu.Items.Add(new ToolStripSeparator());
-        menu.Items.Add("خروج", null, (_, _) => Application.Exit());
+        menu.Items.Add("Exit", null, (_, _) => Application.Exit());
         return menu;
     }
 
-    private static Process StartServer(string root)
+    private static Process StartServer()
     {
+        var packagedServer = Path.Combine(AppContext.BaseDirectory, "Server", "PomodoroTeamTimer.Server.exe");
+        if (File.Exists(packagedServer))
+            return Launch(packagedServer, "", Path.GetDirectoryName(packagedServer)!);
+
+        var root = FindSolutionRoot() ?? throw new DirectoryNotFoundException("PomodoroTeamTimer.Server was not found.");
         var project = Path.Combine(root, "PomodoroTeamTimer.Server", "PomodoroTeamTimer.Server.csproj");
-        var process = Process.Start(new ProcessStartInfo("dotnet", $"run --project \"{project}\" --no-launch-profile")
+        return Launch("dotnet", $"run --project \"{project}\" --no-launch-profile", root);
+    }
+
+    private static Process Launch(string fileName, string arguments, string workingDirectory) =>
+        Process.Start(new ProcessStartInfo(fileName, arguments)
         {
-            WorkingDirectory = root, UseShellExecute = false, CreateNoWindow = true,
-            RedirectStandardOutput = true, RedirectStandardError = true
-        }) ?? throw new InvalidOperationException("سرور اجرا نشد.");
-        Task.Delay(900).ContinueWith(_ => Open(LocalUrl));
-        return process;
+            WorkingDirectory = workingDirectory, UseShellExecute = false, CreateNoWindow = true
+        }) ?? throw new InvalidOperationException("The server process did not start.");
+
+    private static async Task OpenWhenReadyAsync(Process server)
+    {
+        using var client = new HttpClient { Timeout = TimeSpan.FromMilliseconds(500) };
+        for (var attempt = 0; attempt < 30 && !server.HasExited; attempt++)
+        {
+            try
+            {
+                using var response = await client.GetAsync(LocalUrl);
+                if (response.IsSuccessStatusCode) { Open(LocalUrl); return; }
+            }
+            catch { }
+            await Task.Delay(300);
+        }
     }
 
     private static void Open(string url) => Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });

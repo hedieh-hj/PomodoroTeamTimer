@@ -3,3 +3,4 @@ obj/
 .dotnet-home/
 PomodoroTeamTimer.Server/App_Data/*.json
 !PomodoroTeamTimer.Server/App_Data/.gitkeep
+artifacts/
